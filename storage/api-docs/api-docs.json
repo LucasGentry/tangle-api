@@ -1,0 +1,3423 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tangle API Documentation",
+        "description": "API documentation for Tangle application. This API provides endpoints for managing collaborations, user profiles, reviews, and authentication.",
+        "termsOfService": "https://tangle-api.example.com/terms",
+        "contact": {
+            "name": "Tangle API Support",
+            "url": "https://tangle-api.example.com",
+            "email": "admin@example.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/applications/intent/{collaboration}": {
+            "post": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Create payment intent for application",
+                "operationId": "1c9eb48bc872a08ba9f070b2a3f36acb",
+                "parameters": [
+                    {
+                        "name": "collaboration",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment intent created"
+                    },
+                    "403": {
+                        "description": "Already applied or not allowed"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/applications/{collaboration}": {
+            "post": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Submit an application",
+                "operationId": "70029ee89d4886567cedc43e16f3b242",
+                "parameters": [
+                    {
+                        "name": "collaboration",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    },
+                                    "payment_intent_id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Application submitted"
+                    },
+                    "403": {
+                        "description": "Already applied or not allowed"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/applications/{application}/status": {
+            "put": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Update application status",
+                "operationId": "ad9df0628893dc4efd3ddb0537a4bcf5",
+                "parameters": [
+                    {
+                        "name": "application",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "accepted",
+                                            "rejected"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status updated"
+                    },
+                    "403": {
+                        "description": "Not allowed"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/applications/{application}/withdraw": {
+            "post": {
+                "tags": [
+                    "Applications"
+                ],
+                "summary": "Withdraw an application",
+                "operationId": "7ce22f73b2d76e45f28cb2a22ad76451",
+                "parameters": [
+                    {
+                        "name": "application",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Application withdrawn"
+                    },
+                    "403": {
+                        "description": "Not allowed"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Authenticate user and create token",
+                "operationId": "41355220271acb6e39d12f7db8e15749",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "John@webstacks.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful"
+                    },
+                    "422": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout the authenticated user",
+                "operationId": "ae202d0b736ea8ab42d807a8afce9a84",
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logged out successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Send password reset link",
+                "description": "Send a password reset link to the user's email address",
+                "operationId": "567881a9eea1d9368f0e886a18b31c90",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "thomasbose365.24@gmail.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reset link sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Reset password link sent to your email"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unable to send reset link",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unable to send reset link"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The email field is required"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/reset-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Reset password",
+                "description": "Reset user password using the token from email",
+                "operationId": "01ee68a8009f33ba38a65c1525471cc8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "token",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "example": "reset-token-from-email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newPassword123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newPassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unable to reset password",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unable to reset password"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid"
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "password": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The password field is required"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register a new user",
+                "operationId": "327821f35acd35774e6225caebe058fe",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "John@webstacks.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/api/auth/{provider}/redirect": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get social auth URL",
+                "operationId": "e35fdaed1266e71cd8ae13223c26545c",
+                "parameters": [
+                    {
+                        "name": "provider",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "google",
+                                "twitter"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Social auth URL"
+                    }
+                }
+            }
+        },
+        "/api/auth/{provider}/callback": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Handle social auth callback",
+                "operationId": "ea27fd3822f4ed233eb8fd027719c70b",
+                "parameters": [
+                    {
+                        "name": "provider",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "google",
+                                "twitter"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Authentication successful"
+                    },
+                    "422": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/collaborations": {
+            "get": {
+                "tags": [
+                    "Collaboration"
+                ],
+                "summary": "List collaboration requests",
+                "operationId": "a13bf3b2a89432a3e4d71c3148ab5746",
+                "responses": {
+                    "200": {
+                        "description": "List of collaboration requests"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Collaboration"
+                ],
+                "summary": "Create a collaboration request",
+                "operationId": "2b27e2407df4657ca251c988cdc5564c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "description": "Title of the collaboration",
+                                        "type": "string"
+                                    },
+                                    "categories[]": {
+                                        "description": "Categories for the collaboration",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "platforms[]": {
+                                        "description": "Social media platforms",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "deadline": {
+                                        "description": "Deadline for the collaboration",
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "location_type": {
+                                        "description": "Type of location",
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "description": "Location details",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Detailed description",
+                                        "type": "string"
+                                    },
+                                    "collaboration_images[]": {
+                                        "description": "Images for the collaboration (max 5MB each, jpeg/png/jpg)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "collaborator_count": {
+                                        "description": "Number of collaborators",
+                                        "type": "integer"
+                                    },
+                                    "application_fee": {
+                                        "description": "Fee for application",
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "status": {
+                                        "description": "Status of the collaboration",
+                                        "type": "string",
+                                        "enum": [
+                                            "Draft",
+                                            "Open",
+                                            "Reviewing",
+                                            "Reviewing Applicants",
+                                            "In Progress",
+                                            "Completed",
+                                            "Cancelled"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "collaboration": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                },
+                                                "user": {
+                                                    "type": "object"
+                                                },
+                                                "applications": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Not allowed to edit"
+                    },
+                    "404": {
+                        "description": "Collaboration request not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/collaborations/{id}": {
+            "get": {
+                "tags": [
+                    "Collaboration"
+                ],
+                "summary": "Get collaboration request details",
+                "operationId": "bc7dd1a83cc473a89de25a9aa946eb73",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Collaboration request details"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/collaborations/{id}/close": {
+            "post": {
+                "tags": [
+                    "Collaboration"
+                ],
+                "summary": "Close a collaboration request",
+                "operationId": "3b331ecdc2150c69a4ea97bbd7eec46f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Request closed successfully"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Invalid status transition"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/collaborations/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Collaboration"
+                ],
+                "summary": "Cancel a collaboration request",
+                "operationId": "307ac35a990d9a3f3f629682ea543719",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "cancellation_reason": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request cancelled successfully"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/collaborations/by-email": {
+            "get": {
+                "tags": [
+                    "Collaboration"
+                ],
+                "summary": "Get all collaboration IDs and user ID by user email",
+                "description": "Fetch all collaboration IDs and user ID by user email\nGET /api/collaborations/by-email?email=example@email.com",
+                "operationId": "c3398dfbc914d74b0c51b78b595cdf0c",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "User's email address",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user_id": {
+                                            "type": "integer"
+                                        },
+                                        "collaboration_ids": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/api/disputes": {
+            "get": {
+                "tags": [
+                    "Disputes"
+                ],
+                "summary": "Get user's disputes",
+                "operationId": "d4284053739730e6f78c2d998d9ac477",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "open",
+                                "under_review",
+                                "resolved",
+                                "closed"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "payment",
+                                "quality",
+                                "deadline",
+                                "communication",
+                                "other"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of disputes"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Disputes"
+                ],
+                "summary": "Open a new dispute",
+                "operationId": "347cb86ba9a5cebd4936a38448b473f3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "collaboration_request_id",
+                                    "respondent_id",
+                                    "type",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "collaboration_request_id": {
+                                        "type": "integer"
+                                    },
+                                    "respondent_id": {
+                                        "type": "integer"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "payment",
+                                            "quality",
+                                            "deadline",
+                                            "communication",
+                                            "other"
+                                        ]
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "evidence": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Dispute created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/disputes/{id}": {
+            "get": {
+                "tags": [
+                    "Disputes"
+                ],
+                "summary": "Get dispute details",
+                "operationId": "9399661e73a836be7f7e87d7eecf584e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dispute details"
+                    },
+                    "404": {
+                        "description": "Dispute not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/disputes/{id}/respond": {
+            "post": {
+                "tags": [
+                    "Disputes"
+                ],
+                "summary": "Respond to a dispute",
+                "operationId": "2a41f65afe2d126f0184e5259fb66c84",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "response"
+                                ],
+                                "properties": {
+                                    "response": {
+                                        "type": "string"
+                                    },
+                                    "evidence": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Response submitted successfully"
+                    },
+                    "404": {
+                        "description": "Dispute not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/disputes/{id}/close": {
+            "post": {
+                "tags": [
+                    "Disputes"
+                ],
+                "summary": "Close a dispute (initiator only)",
+                "operationId": "777c5140ae096e93818f50081d82bcf7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dispute closed successfully"
+                    },
+                    "404": {
+                        "description": "Dispute not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/disputes": {
+            "get": {
+                "tags": [
+                    "Admin Disputes"
+                ],
+                "summary": "Get all disputes (admin only)",
+                "operationId": "15692d75576436060854667a377796ab",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of all disputes"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/disputes/{id}/resolve": {
+            "post": {
+                "tags": [
+                    "Admin Disputes"
+                ],
+                "summary": "Resolve a dispute (admin only)",
+                "operationId": "cdf59d96e5c41ecb1f358d6a006132ea",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "resolution",
+                                    "resolution_notes"
+                                ],
+                                "properties": {
+                                    "resolution": {
+                                        "type": "string",
+                                        "enum": [
+                                            "payout_to_requestor",
+                                            "refund_to_applicants",
+                                            "shared_fault",
+                                            "no_action"
+                                        ]
+                                    },
+                                    "resolution_notes": {
+                                        "type": "string"
+                                    },
+                                    "admin_notes": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Dispute resolved successfully"
+                    },
+                    "404": {
+                        "description": "Dispute not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/disputes/{id}/review": {
+            "post": {
+                "tags": [
+                    "Admin Disputes"
+                ],
+                "summary": "Mark dispute as under review (admin only)",
+                "operationId": "d7cab0a11cdda3a18e5f7bed8fe471d3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dispute marked as under review"
+                    },
+                    "404": {
+                        "description": "Dispute not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/earnings": {
+            "get": {
+                "tags": [
+                    "Earnings"
+                ],
+                "summary": "Get user's earnings dashboard data",
+                "operationId": "40ae9e523965a37b5ac76618a43fc0cc",
+                "responses": {
+                    "200": {
+                        "description": "Earnings data retrieved"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/messages": {
+            "get": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Get chat messages with a user",
+                "operationId": "9d5effa2cb648df85be0ea9741ffb457",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "content": {
+                                                "type": "string"
+                                            },
+                                            "status": {
+                                                "type": "string"
+                                            },
+                                            "sender": {
+                                                "type": "object"
+                                            },
+                                            "receiver": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Send a new message",
+                "operationId": "db79bb7bcadfdb708e9f6c38ac928f4a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "receiver_id": {
+                                        "type": "integer"
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    },
+                                    "attachment": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Message sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "content": {
+                                            "type": "string"
+                                        },
+                                        "attachment_path": {
+                                            "type": "string",
+                                            "nullable": true
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "enum": [
+                                                "sent"
+                                            ]
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/messages/{message}/status": {
+            "patch": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Update message status",
+                "operationId": "98137794569acf34409f4df4df2dde57",
+                "parameters": [
+                    {
+                        "name": "message",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "delivered",
+                                            "read"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status updated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/messages/typing": {
+            "post": {
+                "tags": [
+                    "Messages"
+                ],
+                "summary": "Send typing indicator",
+                "operationId": "ce52267cab74faafaeee21ec39534d30",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "receiver_id": {
+                                        "type": "integer"
+                                    },
+                                    "is_typing": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Typing indicator sent"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/notifications": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get user notifications",
+                "description": "Returns a paginated list of user notifications",
+                "operationId": "getNotifications",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "format": "uuid"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    },
+                                                    "data": {
+                                                        "type": "object"
+                                                    },
+                                                    "read_at": {
+                                                        "type": "string",
+                                                        "format": "datetime",
+                                                        "nullable": true
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "datetime"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        },
+                                        "per_page": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/notifications/unread": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get unread notifications count",
+                "description": "Returns the count of unread notifications for the authenticated user",
+                "operationId": "getUnreadCount",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "unread_count": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/notifications/{notification}/read": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Mark notification as read",
+                "description": "Marks a specific notification as read",
+                "operationId": "markNotificationAsRead",
+                "parameters": [
+                    {
+                        "name": "notification",
+                        "in": "path",
+                        "description": "Notification ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/notifications/read-all": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Mark all notifications as read",
+                "description": "Marks all notifications as read for the authenticated user",
+                "operationId": "markAllNotificationsAsRead",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/notifications/{notification}": {
+            "delete": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Delete notification",
+                "description": "Deletes a specific notification",
+                "operationId": "deleteNotification",
+                "parameters": [
+                    {
+                        "name": "notification",
+                        "in": "path",
+                        "description": "Notification ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/notification-preferences": {
+            "get": {
+                "tags": [
+                    "Notification Preferences"
+                ],
+                "summary": "Get user's notification preferences",
+                "description": "Returns the notification preferences for the authenticated user",
+                "operationId": "getNotificationPreferences",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "user_id": {
+                                            "type": "integer"
+                                        },
+                                        "Collaboration_Requests": {
+                                            "type": "boolean"
+                                        },
+                                        "Messages": {
+                                            "type": "boolean"
+                                        },
+                                        "Application_Updates": {
+                                            "type": "boolean"
+                                        },
+                                        "Marketing_Emails": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Notification Preferences"
+                ],
+                "summary": "Update notification preferences",
+                "description": "Updates the notification preferences for the authenticated user",
+                "operationId": "updateNotificationPreferences",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "Collaboration_Requests": {
+                                        "type": "boolean"
+                                    },
+                                    "Messages": {
+                                        "type": "boolean"
+                                    },
+                                    "Application_Updates": {
+                                        "type": "boolean"
+                                    },
+                                    "Marketing_Emails": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "user_id": {
+                                            "type": "integer"
+                                        },
+                                        "Collaboration_Requests": {
+                                            "type": "boolean"
+                                        },
+                                        "Messages": {
+                                            "type": "boolean"
+                                        },
+                                        "Application_Updates": {
+                                            "type": "boolean"
+                                        },
+                                        "Marketing_Emails": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/payment-methods": {
+            "get": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "List all payment methods for the authenticated user",
+                "operationId": "a2d7aac6f16fe547c4e555dac9453a47",
+                "responses": {
+                    "200": {
+                        "description": "List of payment methods",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "brand": {
+                                                "type": "string"
+                                            },
+                                            "last4": {
+                                                "type": "string"
+                                            },
+                                            "exp_month": {
+                                                "type": "integer"
+                                            },
+                                            "exp_year": {
+                                                "type": "integer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Add a new payment method",
+                "operationId": "072cfb698e4a9cbb861015cce40c2d54",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "payment_method_id"
+                                ],
+                                "properties": {
+                                    "payment_method_id": {
+                                        "type": "string",
+                                        "example": "pm_1N2Yw2L8r9QeXQ"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Payment method added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment method added successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/payment-methods/{id}": {
+            "delete": {
+                "tags": [
+                    "Payments"
+                ],
+                "summary": "Remove a payment method",
+                "operationId": "5e7d54ac883ef4d81eb43da15961a581",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payment method removed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Payment method removed successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Payment method not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{id}": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get user profile",
+                "operationId": "7ea792ba00ddd5f88aae2eb2acaf82c6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User profile"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{id}/follow": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Follow a user",
+                "operationId": "bcef8495024830938e79edaa03e3fc9d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Follow successful"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{id}/unfollow": {
+            "delete": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Unfollow a user",
+                "operationId": "d1e10d83be66215110b04139edc1da24",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Unfollow successful"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/profile": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update user's basic profile information",
+                "description": "Update basic profile information",
+                "operationId": "56162de6c8a3b48291aee6cf5d6ee14a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "first_name",
+                                    "last_name",
+                                    "location",
+                                    "bio"
+                                ],
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Doe"
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "example": "@JohnDoe"
+                                    },
+                                    "email": {
+                                        "type": "email",
+                                        "example": "JohnDoe@gmail.com"
+                                    },
+                                    "tagline": {
+                                        "type": "string",
+                                        "example": "Developer Designer"
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "London, UK"
+                                    },
+                                    "bio": {
+                                        "type": "string",
+                                        "maxLength": 500,
+                                        "example": "A brief introduction about yourself"
+                                    },
+                                    "profile_photo": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "images[]": {
+                                        "description": "Exactly 3 images required. Max 5MB each. Supported formats: jpeg, png, jpg",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        },
+                                        "maxItems": 3,
+                                        "minItems": 0
+                                    },
+                                    "social_media": {
+                                        "properties": {
+                                            "instagram": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "https://instagram.com/username",
+                                                "nullable": true
+                                            },
+                                            "spotify": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "https://spotify.com/artist/username",
+                                                "nullable": true
+                                            },
+                                            "tiktok": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "https://tiktok.com/@username",
+                                                "nullable": true
+                                            },
+                                            "twitch": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "https://twitch.tv/username",
+                                                "nullable": true
+                                            },
+                                            "youtube": {
+                                                "type": "string",
+                                                "format": "url",
+                                                "example": "https://youtube.com/c/username",
+                                                "nullable": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile updated successfully"
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/completion": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get user's profile completion status",
+                "description": "Get profile completion status",
+                "operationId": "f4493a8fc6bb42f04b9b74c755f2b074",
+                "responses": {
+                    "200": {
+                        "description": "Profile completion status",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "completion_status": {
+                                            "properties": {
+                                                "basic_info": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "portfolio": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                },
+                                                "social_media": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "completion_percentage": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 66.67
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/change-password": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Change user password",
+                "description": "Change user password",
+                "operationId": "45e5919ddf1c7d1e3bda0d845baf95b9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "old_password",
+                                    "new_password",
+                                    "new_password_confirmation"
+                                ],
+                                "properties": {
+                                    "old_password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "oldpassword123"
+                                    },
+                                    "new_password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newpassword456"
+                                    },
+                                    "new_password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "newpassword456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password changed successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Old password incorrect",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Old password is incorrect"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/profile/privacy-visibility-controls": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get privacy and visibility controls",
+                "description": "Get or update privacy and visibility controls for the authenticated user",
+                "operationId": "cbae539cd482fde30fd798b0eac01de4",
+                "responses": {
+                    "200": {
+                        "description": "Current privacy and visibility settings",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "profile_visibility": {
+                                            "type": "string"
+                                        },
+                                        "media_visibility": {
+                                            "type": "string"
+                                        },
+                                        "social_accounts_visibility": {
+                                            "type": "string"
+                                        },
+                                        "social_accounts_audience": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Set privacy and visibility controls",
+                "operationId": "c9de8ce9e83408f3894c80768bc685ac",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "profile_visibility",
+                                    "media_visibility",
+                                    "social_accounts_visibility",
+                                    "social_accounts_audience"
+                                ],
+                                "properties": {
+                                    "profile_visibility": {
+                                        "type": "string",
+                                        "example": "public"
+                                    },
+                                    "media_visibility": {
+                                        "type": "string",
+                                        "example": "public"
+                                    },
+                                    "social_accounts_visibility": {
+                                        "type": "string",
+                                        "example": "public"
+                                    },
+                                    "social_accounts_audience": {
+                                        "type": "string",
+                                        "example": "everyone"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Settings updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Privacy and visibility settings updated successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reminders": {
+            "get": {
+                "tags": [
+                    "Reminders"
+                ],
+                "summary": "Get user's reminders",
+                "operationId": "8cbb20c8f9585000c503c8bebec7bc13",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "pending",
+                                "sent",
+                                "cancelled",
+                                "failed"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "day_3",
+                                "day_7",
+                                "day_14",
+                                "auto_dispute"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of reminders"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reminders/{id}": {
+            "get": {
+                "tags": [
+                    "Reminders"
+                ],
+                "summary": "Get reminder details",
+                "operationId": "b229fe7b7e2eac855d726d55d897662e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reminder details"
+                    },
+                    "404": {
+                        "description": "Reminder not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reminders/{id}/dismiss": {
+            "post": {
+                "tags": [
+                    "Reminders"
+                ],
+                "summary": "Dismiss a reminder",
+                "operationId": "c49cd53db0b0399aa0022cbd4af53b39",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reminder dismissed successfully"
+                    },
+                    "404": {
+                        "description": "Reminder not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/reminders": {
+            "get": {
+                "tags": [
+                    "Admin Reminders"
+                ],
+                "summary": "Get all reminders (admin only)",
+                "operationId": "d4d032c081110a413d39a0122bdebb5a",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "due",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of all reminders"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/reminders/send-due": {
+            "post": {
+                "tags": [
+                    "Admin Reminders"
+                ],
+                "summary": "Send all due reminders (admin only)",
+                "operationId": "9adf62700c901bf45c44cda88c70f803",
+                "responses": {
+                    "200": {
+                        "description": "Due reminders sent successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/reminders/{id}/send": {
+            "post": {
+                "tags": [
+                    "Admin Reminders"
+                ],
+                "summary": "Send a specific reminder (admin only)",
+                "operationId": "323fc6ee8cd44613c40112648cee1d18",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reminder sent successfully"
+                    },
+                    "404": {
+                        "description": "Reminder not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/reminders/{id}/cancel": {
+            "post": {
+                "tags": [
+                    "Admin Reminders"
+                ],
+                "summary": "Cancel a reminder (admin only)",
+                "operationId": "d568c86c5712a289d688e295f9f98cf7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reminder cancelled successfully"
+                    },
+                    "404": {
+                        "description": "Reminder not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/reminders/schedule": {
+            "post": {
+                "tags": [
+                    "Admin Reminders"
+                ],
+                "summary": "Schedule reminders for a collaboration (admin only)",
+                "operationId": "27e6da634b6307cecc60dcd21a083baa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "collaboration_request_id",
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "collaboration_request_id": {
+                                        "type": "integer"
+                                    },
+                                    "user_id": {
+                                        "type": "integer"
+                                    },
+                                    "types": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reminders scheduled successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/reminders/stats": {
+            "get": {
+                "tags": [
+                    "Admin Reminders"
+                ],
+                "summary": "Get reminder statistics (admin only)",
+                "operationId": "22ed00ea47670bf13f8fac890a3488bf",
+                "responses": {
+                    "200": {
+                        "description": "Reminder statistics"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reports": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Get user's reports",
+                "operationId": "42398321972bc3074eef76718e0fd9dc",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of user's reports"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Create a new report",
+                "operationId": "318de4ef8123b483320dc9dbb45b6a43",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "reportable_type",
+                                    "reportable_id",
+                                    "reason"
+                                ],
+                                "properties": {
+                                    "reportable_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "collaboration_request",
+                                            "user",
+                                            "message",
+                                            "review",
+                                            "application"
+                                        ]
+                                    },
+                                    "reportable_id": {
+                                        "type": "integer"
+                                    },
+                                    "reason": {
+                                        "type": "string",
+                                        "enum": [
+                                            "spam",
+                                            "scam",
+                                            "offensive",
+                                            "fake_opportunity",
+                                            "inappropriate",
+                                            "harassment",
+                                            "other"
+                                        ]
+                                    },
+                                    "comment": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Report created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reports/{id}": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Get report details",
+                "operationId": "a4c119b5a8302fa439721ad28809a1fe",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Report details"
+                    },
+                    "404": {
+                        "description": "Report not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/reports": {
+            "get": {
+                "tags": [
+                    "Admin Reports"
+                ],
+                "summary": "Get all reports (admin only)",
+                "operationId": "07327546f93ac360a523eecc9b535f96",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "reason",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of all reports"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/reports/{id}/review": {
+            "post": {
+                "tags": [
+                    "Admin Reports"
+                ],
+                "summary": "Review a report (admin only)",
+                "operationId": "7474c042c99aa070648ffc5da9c7c114",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "action"
+                                ],
+                                "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "enum": [
+                                            "approve",
+                                            "dismiss"
+                                        ]
+                                    },
+                                    "admin_notes": {
+                                        "type": "string"
+                                    },
+                                    "admin_action": {
+                                        "type": "string",
+                                        "enum": [
+                                            "none",
+                                            "warn",
+                                            "suspend",
+                                            "delete",
+                                            "hide"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Report reviewed successfully"
+                    },
+                    "404": {
+                        "description": "Report not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/reports/{id}/mark-review": {
+            "post": {
+                "tags": [
+                    "Admin Reports"
+                ],
+                "summary": "Mark report as under review (admin only)",
+                "operationId": "1d1f0269722af77cc427c8bb7c2f48b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Report marked as under review"
+                    },
+                    "404": {
+                        "description": "Report not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/reports/stats": {
+            "get": {
+                "tags": [
+                    "Admin Reports"
+                ],
+                "summary": "Get report statistics (admin only)",
+                "operationId": "bfda012d19ea17e70f84d9c4f3923ae1",
+                "responses": {
+                    "200": {
+                        "description": "Report statistics"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/collaborations/{collaborationRequest}/reviews": {
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Create a new review for a collaboration",
+                "operationId": "a087819f9c4abf7f79ce0b9337317884",
+                "parameters": [
+                    {
+                        "name": "collaborationRequest",
+                        "in": "path",
+                        "description": "ID of the collaboration request",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "rating"
+                                ],
+                                "properties": {
+                                    "rating": {
+                                        "type": "integer",
+                                        "maximum": 5,
+                                        "minimum": 1,
+                                        "example": 4
+                                    },
+                                    "comment": {
+                                        "type": "string",
+                                        "maxLength": 1000,
+                                        "example": "I like the collaboration"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Review created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "review": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - User not authorized or review already exists"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reviews/{review}/flag": {
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Flag a review for moderation",
+                "operationId": "2a865af16b0517be619580d2f345348e",
+                "parameters": [
+                    {
+                        "name": "review",
+                        "in": "path",
+                        "description": "ID of the review",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "flag_reason"
+                                ],
+                                "properties": {
+                                    "flag_reason": {
+                                        "type": "string",
+                                        "maxLength": 1000
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Review flagged successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/reviews/{review}": {
+            "post": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Admin review of a flagged review",
+                "operationId": "68f4c18e244e3a3aadb8d2438ca3c273",
+                "parameters": [
+                    {
+                        "name": "review",
+                        "in": "path",
+                        "description": "ID of the review",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "is_hidden"
+                                ],
+                                "properties": {
+                                    "is_hidden": {
+                                        "type": "boolean"
+                                    },
+                                    "admin_notes": {
+                                        "type": "string",
+                                        "maxLength": 1000
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Review moderated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/users/{userId}/reviews": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get reviews for a specific user",
+                "operationId": "a7a6a273e5c5a9d9d8b2a68443bebb88",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of the user",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of user reviews"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reviews/flagged": {
+            "get": {
+                "tags": [
+                    "Reviews"
+                ],
+                "summary": "Get all flagged reviews pending admin review",
+                "operationId": "b270741b35b76c411b53e36da0e3a740",
+                "responses": {
+                    "200": {
+                        "description": "List of flagged reviews"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Enter token in format (Bearer <token>)",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "API Endpoints for user authentication"
+        },
+        {
+            "name": "Profile",
+            "description": "User profile management endpoints"
+        },
+        {
+            "name": "Collaboration",
+            "description": "Collaboration request management endpoints"
+        },
+        {
+            "name": "Applications",
+            "description": "Application management endpoints"
+        },
+        {
+            "name": "Reviews",
+            "description": "Review management endpoints"
+        },
+        {
+            "name": "Messages",
+            "description": "API Endpoints for chat messages"
+        },
+        {
+            "name": "Notifications",
+            "description": "API Endpoints for managing notifications"
+        },
+        {
+            "name": "Notification Preferences",
+            "description": "API Endpoints for managing notification preferences"
+        },
+        {
+            "name": "Payments",
+            "description": "Manage payment methods and payout settings"
+        },
+        {
+            "name": "Disputes",
+            "description": "Disputes"
+        },
+        {
+            "name": "Admin Disputes",
+            "description": "Admin Disputes"
+        },
+        {
+            "name": "Earnings",
+            "description": "Earnings"
+        },
+        {
+            "name": "Reminders",
+            "description": "Reminders"
+        },
+        {
+            "name": "Admin Reminders",
+            "description": "Admin Reminders"
+        },
+        {
+            "name": "Reports",
+            "description": "Reports"
+        },
+        {
+            "name": "Admin Reports",
+            "description": "Admin Reports"
+        }
+    ]
+}
